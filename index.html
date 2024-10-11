@@ -29,7 +29,7 @@
         const pages = [
             {
                 type: 'video',
-                content: '<iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_enablejsapi=1&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+                content: '<iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_?enablejsapi=1&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
             },
             {
                 type: 'calendar',
@@ -37,27 +37,28 @@
             },
             {
                 type: 'weather',
-                content: '<iframe src="https://forecast7.com/en/SEU_CIDADE/" style="border:0; width:100%; height:100%;" frameborder="0"></iframe>'
+                content: '<iframe src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=-19.353&lon=-56.25&detailLat=-15.581&detailLon=-56.25&detail=true" style="border:0; width:100%; height:100%;" frameborder="0"></iframe>'
             },
             {
                 type: 'news',
-                content: '<iframe width="650" height="650" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=-19.353&lon=-56.25&detailLat=-15.581&detailLon=-56.25&detail=true" frameborder="0"></iframe>'
+                content: '<iframe src="https://SEU_SITE_DE_NOTÍCIAS" style="border:0; width:100%; height:100%;" frameborder="0"></iframe>'
             }
         ];
 
         let currentIndex = 0;
         let transitionDuration = 10000; // 10 segundos
+        let player;
 
         function showPage() {
             const page = pages[currentIndex];
             document.getElementById('content').innerHTML = page.content;
 
             if (page.type === 'video') {
-                // Esperar o vídeo terminar antes de mudar
                 const videoElement = document.getElementById('video');
                 videoElement.onload = () => {
-                    const player = new YT.Player(videoElement, {
+                    player = new YT.Player(videoElement, {
                         events: {
+                            'onReady': onPlayerReady,
                             'onStateChange': onPlayerStateChange
                         }
                     });
@@ -65,6 +66,10 @@
             } else {
                 setTimeout(nextPage, transitionDuration);
             }
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo(); // Iniciar o vídeo quando o player estiver pronto
         }
 
         function onPlayerStateChange(event) {
