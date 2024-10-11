@@ -78,6 +78,13 @@
         currentSection = (currentSection + 1) % sections.length;
         sections[currentSection].classList.add('active');
 
+          // Se a próxima página for a do vídeo, inicie o vídeo automaticamente
+        if (currentSection === videoSectionIndex) {
+            videoPlayer.playVideo();
+            clearInterval(autoTransition); // Pausa o timer automático para o vídeo
+        }
+    }
+
         // Se a próxima página for a do vídeo, espere o término do vídeo
         if (currentSection === videoSectionIndex) {
             clearInterval(autoTransition); // Pausa o timer automático para o vídeo
