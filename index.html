@@ -47,6 +47,7 @@
 
         let currentIndex = 0;
         let player;
+        let isVideoPlaying = false;
 
         // Função chamada quando a API do YouTube estiver pronta
         function onYouTubeIframeAPIReady() {
@@ -58,6 +59,7 @@
             document.getElementById('content').innerHTML = '';
 
             if (page.type === 'video') {
+                // Criar o iframe do vídeo
                 const videoElement = document.createElement('iframe');
                 videoElement.id = 'video';
                 videoElement.width = '100%';
@@ -69,7 +71,7 @@
 
                 document.getElementById('content').appendChild(videoElement);
 
-                // Criar um novo player sempre que o vídeo for exibido
+                // Criar o player do YouTube e associar os eventos
                 player = new YT.Player(videoElement, {
                     events: {
                         'onReady': onPlayerReady,
@@ -77,6 +79,7 @@
                     }
                 });
             } else {
+                // Carregar conteúdo de outros tipos
                 document.getElementById('content').innerHTML = page.content;
                 setTimeout(nextPage, 10000); // 10 segundos para outros tipos de conteúdo
             }
@@ -87,7 +90,6 @@
         }
 
         function onPlayerStateChange(event) {
-            // Se o vídeo acabou, chama a próxima página
             if (event.data === YT.PlayerState.ENDED) {
                 nextPage();
             }
@@ -95,13 +97,6 @@
 
         function nextPage() {
             currentIndex = (currentIndex + 1) % pages.length;
-
-            // Reinicia o player para garantir que o novo vídeo seja carregado corretamente
-            if (pages[currentIndex].type === 'video') {
-                // Se estamos indo para a página de vídeo, vamos garantir que o player seja sempre recriado
-                player = null; // Zera o player anterior
-            }
-
             showPage();
         }
 
