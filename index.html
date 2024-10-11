@@ -60,7 +60,7 @@
     <!-- Página 4 - Previsão do Tempo -->
     <div class="section" id="page-4">
         <h2>Previsão do Tempo</h2>
-        <iframe scrolling="no" frameborder="0" marginwidth="0" marginheight="0" width="120" height="170" src="https://selos.climatempo.com.br/selos/MostraSelo120.php?CODCIDADE=218,4774,758,755,756&SKIN=azul"></iframe>
+        <iframe width="650" height="650" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=-19.353&lon=-56.25&detailLat=-15.581&detailLon=-56.25&detail=true" frameborder="0"></iframe>
     </div>
 </div>
 
@@ -93,9 +93,17 @@
     function onYouTubeIframeAPIReady() {
         videoPlayer = new YT.Player('video-frame', {
             events: {
+                'onReady': onPlayerReady,  // Quando o player estiver pronto, chamamos a função para reproduzir o vídeo automaticamente
                 'onStateChange': onPlayerStateChange
             }
         });
+    }
+
+    // Reproduz o vídeo automaticamente quando o player está pronto
+    function onPlayerReady(event) {
+        if (currentSection === videoSectionIndex) {
+            event.target.playVideo();  // Reproduz automaticamente ao carregar a página de vídeo
+        }
     }
 
     // Função para monitorar o estado do vídeo e avançar para a próxima página após o vídeo terminar
