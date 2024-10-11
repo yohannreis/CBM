@@ -3,138 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Corporativa</title>
+    <title>TV Interativa</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            text-align: center;
+            overflow: hidden;
+            background-color: #000;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .section {
-            display: none;
+        #content {
+            width: 100vw;
             height: 100vh;
+            display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-        }
-        .active {
-            display: flex;
-        }
-        iframe {
-            width: 100%;
-            height: 1080px;
-        }
-        .calendario iframe, .previsao iframe {
-            height: 1080px;
+            color: #fff;
+            font-size: 2em;
+            text-align: center;
         }
     </style>
 </head>
 <body>
+    <div id="content"></div>
 
-<div class="container">
-    <!-- Página 1 - Vídeo Corporativo -->
-    <div class="section active" id="page-1">
-        <h2>Vídeo Corporativo</h2>
-        <iframe id="video-frame" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_autoplay=1&mute=1&enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>
-
-    <!-- Página 2 - Últimas Notícias -->
-    <div class="section" id="page-2">
-        <h2>Últimas Notícias</h2>
-        <p>Coloque aqui as últimas atualizações ou notícias importantes.</p>
-    </div>
-
-    <!-- Página 3 - Calendário de Eventos -->
-    <div class="section" id="page-3">
-        <h2>Calendário de Eventos</h2>
-        <iframe src="https://calendar.google.com/calendar/embed?src=SEU_CALENDARIO" frameborder="0"></iframe>
-    </div>
-
-    <!-- Página 4 - Previsão do Tempo -->
-    <div class="section" id="page-4">
-        <h2>Previsão do Tempo</h2>
-        <iframe width="650" height="650" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=-19.353&lon=-56.25&detailLat=-15.581&detailLon=-56.25&detail=true" frameborder="0"></iframe>
-    </div>
-</div>
-
-<script>
-    // Lista das páginas
-    const sections = document.querySelectorAll('.section');
-    let currentSection = 0;
-    let videoPlayer;
-    const videoSectionIndex = 0; // Índice da seção do vídeo (página 1)
-    const delayTime = 10000; // Tempo de espera (10 segundos) para as outras seções
-    let autoTransition; // Variável para controlar o intervalo automático
-
-    // Função para mudar de página
-    function showNextSection() {
-        // Remove a classe active da seção atual
-        sections[currentSection].classList.remove('active');
-        // Incrementa a seção atual
-        currentSection = (currentSection + 1) % sections.length;
-        // Adiciona a classe active à nova seção
-        sections[currentSection].classList.add('active');
-
-        // Se a próxima página for o vídeo, reinicia o vídeo e inicia a reprodução
-        if (currentSection === videoSectionIndex) {
-            videoPlayer.seekTo(0);  // Reinicia o vídeo para o início
-            videoPlayer.playVideo(); // Inicia a reprodução do vídeo
-            clearInterval(autoTransition); // Pausa o timer automático para o vídeo
-        } else {
-            // Para as outras páginas, reinicia o timer
-            clearInterval(autoTransition);
-            autoTransition = setInterval(showNextSection, delayTime);
-        }
-    }
-
-    // Função para iniciar a API do YouTube e controlar o estado do vídeo
-    function onYouTubeIframeAPIReady() {
-        videoPlayer = new YT.Player('video-frame', {
-            events: {
-                'onReady': onPlayerReady,  // Quando o player estiver pronto, chamamos a função para reproduzir o vídeo automaticamente
-                'onStateChange': onPlayerStateChange
+    <script>
+        const pages = [
+            {
+                type: 'video',
+                content: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+            },
+            {
+                type: 'calendar',
+                content: '<iframe src="https://calendar.google.com/calendar/embed?src=SEU_CALENDÁRIO_ID&ctz=America/Sao_Paulo" style="border: 0" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>'
+            },
+            {
+                type: 'weather',
+                content: '<iframe src="https://forecast7.com/en/SEU_CIDADE/" style="border:0; width:100%; height:100%;" frameborder="0"></iframe>'
+            },
+            {
+                type: 'news',
+                content: '<iframe width="650" height="650" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=-19.353&lon=-56.25&detailLat=-15.581&detailLon=-56.25&detail=true" frameborder="0"></iframe>'
             }
-        });
-    }
+        ];
 
-    // Reproduz o vídeo automaticamente quando o player está pronto
-    function onPlayerReady(event) {
-        if (currentSection === videoSectionIndex) {
-            event.target.playVideo();  // Reproduz automaticamente ao carregar a página de vídeo
+        let currentIndex = 0;
+        let transitionDuration = 10000; // 10 segundos
+
+        function showPage() {
+            const page = pages[currentIndex];
+            document.getElementById('content').innerHTML = page.content;
+
+            if (page.type === 'video') {
+                // Esperar o vídeo terminar antes de mudar
+                const videoElement = document.querySelector('iframe');
+                videoElement.onload = () => {
+                    const player = new YT.Player(videoElement, {
+                        events: {
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                };
+            } else {
+                setTimeout(nextPage, transitionDuration);
+            }
         }
-    }
 
-    // Função para monitorar o estado do vídeo e avançar para a próxima página após o vídeo terminar
-    function onPlayerStateChange(event) {
-        if (event.data === YT.PlayerState.ENDED) {
-            showNextSection(); // Muda para a próxima seção quando o vídeo terminar
-            autoTransition = setInterval(showNextSection, delayTime); // Retoma o timer para as outras seções
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                nextPage();
+            }
         }
-    }
 
-    // Inicializa o timer para mudar as seções automaticamente (exceto para o vídeo)
-    function startAutoTransition() {
-        if (currentSection !== videoSectionIndex) {
-            autoTransition = setInterval(showNextSection, delayTime);
+        function nextPage() {
+            currentIndex = (currentIndex + 1) % pages.length;
+            showPage();
         }
-    }
 
-    // Espera o carregamento da API do YouTube
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // Carregar a API do YouTube para habilitar autoplay
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // Inicia o ciclo automático para as outras páginas
-    startAutoTransition();
-</script>
-
+        // Mostrar a primeira página
+        showPage();
+    </script>
 </body>
 </html>
