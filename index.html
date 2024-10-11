@@ -42,7 +42,7 @@
     <!-- Página 1 - Vídeo Corporativo -->
     <div class="section active" id="page-1">
         <h2>Vídeo Corporativo</h2>
-        <iframe id="video-frame" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_autoplay=1&enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe id="video-frame" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_autoplay=1&mute=1&enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
     <!-- Página 2 - Últimas Notícias -->
@@ -86,6 +86,10 @@
         if (currentSection === videoSectionIndex) {
             videoPlayer.playVideo();
             clearInterval(autoTransition); // Pausa o timer automático para o vídeo
+        } else {
+            // Para as outras páginas, reinicia o timer
+            clearInterval(autoTransition);
+            autoTransition = setInterval(showNextSection, delayTime);
         }
     }
 
@@ -116,7 +120,9 @@
 
     // Inicializa o timer para mudar as seções automaticamente (exceto para o vídeo)
     function startAutoTransition() {
-        autoTransition = setInterval(showNextSection, delayTime);
+        if (currentSection !== videoSectionIndex) {
+            autoTransition = setInterval(showNextSection, delayTime);
+        }
     }
 
     // Espera o carregamento da API do YouTube
