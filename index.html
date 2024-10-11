@@ -55,14 +55,17 @@
 
             if (page.type === 'video') {
                 const videoElement = document.getElementById('video');
-                videoElement.onload = () => {
+                // Verifique se o player já foi criado antes
+                if (player) {
+                    player.loadVideoById("SEU_VIDEO_ID");
+                } else {
                     player = new YT.Player(videoElement, {
                         events: {
                             'onReady': onPlayerReady,
                             'onStateChange': onPlayerStateChange
                         }
                     });
-                };
+                }
             } else {
                 setTimeout(nextPage, transitionDuration);
             }
