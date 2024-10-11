@@ -55,16 +55,15 @@
 
             if (page.type === 'video') {
                 const videoElement = document.getElementById('video');
-                // Verifique se o player já foi criado antes
-                if (player) {
-                    player.loadVideoById("SEU_VIDEO_ID");
-                } else {
+                if (!player) {
                     player = new YT.Player(videoElement, {
                         events: {
                             'onReady': onPlayerReady,
                             'onStateChange': onPlayerStateChange
                         }
                     });
+                } else {
+                    player.loadVideoById("SEU_VIDEO_ID");
                 }
             } else {
                 setTimeout(nextPage, transitionDuration);
@@ -76,6 +75,7 @@
         }
 
         function onPlayerStateChange(event) {
+            // Verifica se o estado do vídeo é "ENDED"
             if (event.data === YT.PlayerState.ENDED) {
                 nextPage();
             }
