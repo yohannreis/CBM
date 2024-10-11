@@ -69,13 +69,15 @@
 
                 document.getElementById('content').appendChild(videoElement);
 
-                // Criar um novo player sempre que o vídeo for exibido
-                player = new YT.Player(videoElement, {
-                    events: {
-                        'onReady': onPlayerReady,
-                        'onStateChange': onPlayerStateChange
-                    }
-                });
+                // Usar setTimeout para garantir que o iframe foi totalmente carregado
+                setTimeout(() => {
+                    player = new YT.Player(videoElement, {
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }, 100); // Atraso de 100ms para garantir que o iframe foi carregado
             } else {
                 document.getElementById('content').innerHTML = page.content;
                 setTimeout(nextPage, 10000); // 10 segundos para outros tipos de conteúdo
