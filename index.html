@@ -48,8 +48,9 @@
         let currentIndex = 0;
         let player;
 
+        // Função chamada quando a API do YouTube estiver pronta
         function onYouTubeIframeAPIReady() {
-            showPage(); // Chama showPage apenas quando a API está pronta
+            showPage();
         }
 
         function showPage() {
@@ -57,8 +58,9 @@
             document.getElementById('content').innerHTML = page.content;
 
             if (page.type === 'video') {
-                const videoElement = document.getElementById('video');
+                // Se não houver player, cria um novo
                 if (!player) {
+                    const videoElement = document.getElementById('video');
                     player = new YT.Player(videoElement, {
                         events: {
                             'onReady': onPlayerReady,
@@ -74,11 +76,10 @@
         }
 
         function onPlayerReady(event) {
-            event.target.playVideo(); // Iniciar o vídeo quando o player estiver pronto
+            event.target.playVideo();
         }
 
         function onPlayerStateChange(event) {
-            // Verifica se o estado do vídeo é "ENDED"
             if (event.data === YT.PlayerState.ENDED) {
                 nextPage();
             }
@@ -89,7 +90,7 @@
             showPage();
         }
 
-        // Carregar a API do YouTube para habilitar autoplay
+        // Carregar a API do YouTube
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
