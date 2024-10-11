@@ -29,7 +29,7 @@
         const pages = [
             {
                 type: 'video',
-                content: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+                content: '<iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/PDICB-UPGOY?si=nYvpK-TA1ObIFDA_enablejsapi=1&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
             },
             {
                 type: 'calendar',
@@ -54,7 +54,7 @@
 
             if (page.type === 'video') {
                 // Esperar o vídeo terminar antes de mudar
-                const videoElement = document.querySelector('iframe');
+                const videoElement = document.getElementById('video');
                 videoElement.onload = () => {
                     const player = new YT.Player(videoElement, {
                         events: {
