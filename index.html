@@ -46,10 +46,8 @@
         ];
 
         let currentIndex = 0;
-        const transitionDuration = 10000; // 10 segundos
         let player;
 
-        // Função para carregar a API do YouTube
         function onYouTubeIframeAPIReady() {
             showPage(); // Chama showPage apenas quando a API está pronta
         }
@@ -71,7 +69,7 @@
                     player.loadVideoById("SEU_VIDEO_ID");
                 }
             } else {
-                setTimeout(nextPage, transitionDuration);
+                setTimeout(nextPage, 10000); // 10 segundos para outros tipos de conteúdo
             }
         }
 
