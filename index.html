@@ -60,7 +60,7 @@
     <!-- Página 4 - Previsão do Tempo -->
     <div class="section" id="page-4">
         <h2>Previsão do Tempo</h2>
-       <iframe width="650" height="650" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=km/h&zoom=7&overlay=rain&product=ecmwf&level=surface&lat=-16.72&lon=-56.074&detailLat=-15.771&detailLon=-56.074&detail=true&message=true" frameborder="0"></iframe>
+        <iframe scrolling="no" frameborder="0" marginwidth="0" marginheight="0" width="120" height="170" src="https://selos.climatempo.com.br/selos/MostraSelo120.php?CODCIDADE=218,4774,758,755,756&SKIN=azul"></iframe>
     </div>
 </div>
 
@@ -78,20 +78,14 @@
         currentSection = (currentSection + 1) % sections.length;
         sections[currentSection].classList.add('active');
 
-          // Se a próxima página for a do vídeo, inicie o vídeo automaticamente
+        // Se a próxima página for a do vídeo, inicie o vídeo automaticamente
         if (currentSection === videoSectionIndex) {
             videoPlayer.playVideo();
             clearInterval(autoTransition); // Pausa o timer automático para o vídeo
         }
     }
 
-        // Se a próxima página for a do vídeo, espere o término do vídeo
-        if (currentSection === videoSectionIndex) {
-            clearInterval(autoTransition); // Pausa o timer automático para o vídeo
-        }
-    }
-
-    // Configurar o YouTube API para detectar quando o vídeo termina
+    // Configurar o YouTube API para detectar quando o vídeo termina e iniciar o vídeo
     function onYouTubeIframeAPIReady() {
         videoPlayer = new YT.Player('video-frame', {
             events: {
