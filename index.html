@@ -87,19 +87,21 @@
         }
 
         function onPlayerStateChange(event) {
-            // Verificar se o vídeo terminou
+            // Se o vídeo acabou, chama a próxima página
             if (event.data === YT.PlayerState.ENDED) {
                 nextPage();
-            } else if (event.data === YT.PlayerState.PLAYING) {
-                // Se o vídeo estiver sendo reproduzido, não agende a transição
-                clearTimeout(transitionTimeout);
             }
         }
 
-        let transitionTimeout; // Variável para armazenar o timeout da transição
-
         function nextPage() {
             currentIndex = (currentIndex + 1) % pages.length;
+
+            // Reinicia o player para garantir que o novo vídeo seja carregado corretamente
+            if (pages[currentIndex].type === 'video') {
+                // Se estamos indo para a página de vídeo, vamos garantir que o player seja sempre recriado
+                player = null; // Zera o player anterior
+            }
+
             showPage();
         }
 
