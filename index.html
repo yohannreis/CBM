@@ -69,8 +69,8 @@
     const sections = document.querySelectorAll('.section');
     let currentSection = 0;
     let videoPlayer;
-    const videoSectionIndex = 0; // Índice da seção do vídeo
-    const delayTime = 15000; // Tempo de espera (15 segundos) para as outras seções
+    const videoSectionIndices = [0]; // Índices das seções de vídeo
+    const delayTime = 10000; // Tempo de espera (10 segundos) para as outras seções
 
     // Função para mudar de página
     function showNextSection() {
@@ -78,8 +78,8 @@
         currentSection = (currentSection + 1) % sections.length;
         sections[currentSection].classList.add('active');
 
-        // Se a próxima página for a do vídeo, inicie o vídeo automaticamente
-        if (currentSection === videoSectionIndex) {
+        // Se a próxima página for um vídeo, inicie o vídeo automaticamente
+        if (videoSectionIndices.includes(currentSection)) {
             videoPlayer.playVideo();
             clearInterval(autoTransition); // Pausa o timer automático para o vídeo
         }
@@ -102,7 +102,7 @@
         }
     }
 
-    // Altera de página a cada 15 segundos (para as outras seções)
+    // Altera de página a cada 10 segundos (para as outras seções)
     let autoTransition = setInterval(showNextSection, delayTime);
 
     // Iniciar a API do YouTube
